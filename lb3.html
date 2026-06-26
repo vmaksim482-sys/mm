@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Макет застосунку</title>
+    <style>
+        /* Базові стилі макета */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #1e1e1e;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .action-btn {
+            padding: 12px 24px;
+            background-color: #7b1fa2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .action-btn:hover {
+            background-color: #9c27b0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 40px 20px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Стилі для карток (клієнтська частина) */
+        .card {
+            background-color: #252526;
+            width: 300px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            /* Початковий стан для JS-анімації */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        /* Клас, який буде додаватися через JavaScript */
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #ce93d8;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>System Reader: Каталог</h1>
+        <button class="action-btn" id="syncBtn">Синхронізувати статус</button>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h3>Your Talent Is Mine</h3>
+            <p>Жанр: Екшен, Фентезі. Система копіювання талантів у світі, що змінився після вторгнення монстрів.</p>
+        </div>
+        <div class="card">
+            <h3>Як вижити генію, обмеженому в часі</h3>
+            <p>Жанр: Драма, Фентезі. Історія про подолання неможливого за допомогою системних підказок.</p>
+        </div>
+        <div class="card">
+            <h3>Глобальне пробудження</h3>
+            <p>Жанр: Бойові мистецтва, ЛітРПГ. Отримання сили фіолетового грому на самому початку шляху.</p>
+        </div>
+        <div class="card">
+            <h3>Підняття рівня наодинці</h3>
+            <p>Жанр: Екшен. Перехід від найслабшого мисливця до правителя тіней.</p>
+        </div>
+    </div>
+
+    <script>
+        // АНІМАЦІЯ 1: Реакція кнопки на клік (масштабування)
+        const button = document.getElementById('syncBtn');
+        button.addEventListener('click', () => {
+            // Зменшуємо кнопку
+            button.style.transform = 'scale(0.9)';
+            // Повертаємо до нормального розміру через 150 мілісекунд
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+            }, 150);
+        });
+
+        // АНІМАЦІЯ 2: Поява карток при завантаженні/прокрутці сторінки
+        const cards = document.querySelectorAll('.card');
+        
+        // Використовуємо IntersectionObserver для відстеження видимості елементів
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Коли картка з'являється на екрані, додаємо їй клас "visible"
+                    entry.target.classList.add('visible');
+                    // Перестаємо відстежувати цю картку, щоб анімація програлась лише раз
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 }); // Спрацьовує, коли видно хоча б 10% картки
+
+        // Запускаємо спостереження для кожної картки
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+
+</body>
+</html>
